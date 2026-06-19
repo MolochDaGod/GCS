@@ -11,6 +11,7 @@ import MessageWindow from "../components/MessageWindow"
 import MergeOptions from "../components/MergeOptions"
 import FileDropComponent from "../components/FileDropComponent"
 import PurchaseMenu from "../components/PurchaseMenu"
+import { createCharacter, isAuthenticated } from "../services/grudgeAPI"
 
 
 function Save() {
@@ -71,6 +72,46 @@ function Save() {
     setPurchaseTraits([]);
   }
 
+  // Save current customized character (VRM data) to Grudge backend via grudgeAPI.
+  // Links to your Grudge ID, generates UUID, starts inventory/equipment, auto cNFT path.
+  // Works when launched from Hydra launcher (grudge_token injected) or after Sign In.
+  const saveToGrudgeAccount = async () => {
+    if (!isAuthenticated()) {
+      alert('Sign in with Grudge ID (via launcher or the Sign In button) to save characters to your account.')
+      return
+    }
+    try {
+      const cm = characterManager
+      // Build lightweight model3d payload from current avatar state (expandable)
+      const equipped = {}
+      if (cm && cm.avatar) {
+        for (const [slot, data] of Object.entries(cm.avatar)) {
+          if (data && (data.name || data.traitInfo)) equipped[slot] = data.name || data.traitInfo?.id || true
+        }
+      }
+      const model3d = {
+        baseModelId: 'human',
+        equippedMeshes: equipped,
+        weaponSlots: {},
+        faceVariant: 'A',
+        skinColor: '#e8c39e',
+        armorColor: '#555',
+        capeEnabled: false,
+        scale: 1.0,
+      }
+      const displayName = (localStorage.getItem('name') || 'GrudgeHero').trim()
+      const char = await createCharacter({
+        name: displayName,
+        raceId: 'human',
+        classId: 'warrior',
+        model3d,
+      })
+      alert(`Saved "${char.name}" to your Grudge account!\nID: ${char.id} • UUID linked to your Grudge ID.`)
+    } catch (e) {
+      alert('Save to Grudge failed: ' + (e.message || e))
+    }
+  }
+
   return (
     <div className={styles.container}>
       
@@ -105,6 +146,14 @@ function Save() {
           onPurchaseClick = {onPurchaseClick}
         />
         
+        <CustomButton
+          theme="light"
+          text="Save to Grudge (ID + UUID + cNFT)"
+          size={12}
+          className={styles.button}
+          onClick={saveToGrudgeAccount}
+        />
+
         <CustomButton
             theme="light"
             text="mint"//{t('callToAction.mint')}

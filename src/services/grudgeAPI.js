@@ -15,7 +15,7 @@ const ASSET_CDN = import.meta.env.VITE_ASSET_CDN || 'https://assets.grudge-studi
 // ── Auth helpers ─────────────────────────────────────────────────
 
 function getAuthToken() {
-  return localStorage.getItem('grudge_auth_token') || '';
+  return localStorage.getItem('grudge_auth_token') || localStorage.getItem('access_token') || '';
 }
 
 function getGrudgeId() {
@@ -93,7 +93,7 @@ const STARTING_INVENTORY = [
  * @param {string} params.name - Character name
  * @param {string} params.raceId - Race ID (human, barbarian, elf, dwarf, orc, undead)
  * @param {string} params.classId - Class ID (warrior, mage, ranger, worg)
- * @param {Object} params.model3d - 3D appearance data from CharacterStudio customization
+ * @param {Object} params.model3d - 3D appearance data from CharacterStudio customization. For grudge6 race characters (mesh armours + weapons), include sourceUrl pointing to grudge6.grudge-studio.com and grudge6:true. Training/play saves use this for real equipped models.
  * @param {Object} [params.skillLoadouts] - Initial skill selections
  * @returns {Promise<Object>} Created character with id, uuid, model3d
  */
@@ -115,6 +115,9 @@ export async function createCharacter({ name, raceId, classId, model3d, skillLoa
         armorColor: model3d?.armorColor || '#ffffff',
         capeEnabled: false,
         scale: 1.0,
+        // Support for grudge6 real race characters with mesh armours + weapons from grudge6.grudge-studio.com
+        sourceUrl: model3d?.sourceUrl,
+        grudge6: model3d?.grudge6 || false,
       },
       skillLoadouts: skillLoadouts || {},
       equippedWeaponId: null, // unarmed

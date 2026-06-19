@@ -46,7 +46,35 @@ export const AccountProvider = (props) => {
     }
   }, [connected])
 
+  // React to launcher / popup auth handoff (grudge-auth-updated custom event or storage)
+  useEffect(() => {
+    const refreshAuth = () => {
+      const hasToken = !!localStorage.getItem('grudge_auth_token')
+      setConnected(hasToken)
+      setGrudgeId(getGrudgeId() || '')
+      if (hasToken) {
+        getCharacters().then(chars => setCharacters(chars)).catch(() => {})
+      }
+    }
+    window.addEventListener('grudge-auth-updated', refreshAuth)
+    // Also catch storage events (cross-tab) and focus
+    const onStorage = (e) => { if (e.key && e.key.includes('grudge')) refreshAuth() }
+    window.addEventListener('storage', onStorage)
+    window.addEventListener('focus', refreshAuth)
+    return () => {
+      window.removeEventListener('grudge-auth-updated', refreshAuth)
+      window.removeEventListener('storage', onStorage)
+      window.removeEventListener('focus', refreshAuth)
+    }
+  }, [])
+
   const login = () => {
+    // Prefer the rich popup flow used by the Grudge Launcher / Hydra (id.grudge-studio.com/api/auth/page)
+    // Falls back to redirect if popup helper not present.
+    if (typeof window !== 'undefined' && window.openGrudgeSSO) {
+      window.openGrudgeSSO()
+      return
+    }
     window.location.href = buildLoginUrl(window.location.href)
   }
 
