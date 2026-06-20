@@ -8,7 +8,9 @@
  * Same endpoints, same auth pattern, same DB.
  */
 
-const API_BASE = import.meta.env.VITE_GRUDGE_API || 'https://api.grudge-studio.com';
+/** Browser: same-origin /api → Vercel fleet rewrites → Railway game data */
+const API_BASE = import.meta.env.VITE_GRUDGE_API
+  || (typeof window !== 'undefined' ? '' : 'https://grudge-builder-production.up.railway.app');
 const AUTH_GATEWAY = import.meta.env.VITE_AUTH_GATEWAY || 'https://id.grudge-studio.com';
 const ASSET_CDN = import.meta.env.VITE_ASSET_CDN || 'https://assets.grudge-studio.com';
 

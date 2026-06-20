@@ -15,6 +15,9 @@ import "./lib/localization/i18n"
 
 import App from "./App"
 import { LanguageProvider } from "./context/LanguageContext"
+import { wireGrudgeFleet } from "./lib/fleet"
+
+wireGrudgeFleet({ skipAuthPickup: true }).catch(() => {})
 
 // ── Grudge Unified Auth consume (matches launcher + Nexus Nemesis exactly) ──
 // Supports: direct launch from Hydra with ?grudge_token=... , popup postMessage from id.grudge-studio.com/api/auth/page
