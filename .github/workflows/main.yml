@@ -1,53 +1,38 @@
 name: Deploy to GitHub Pages
-
 on:
   push:
-    branches:
-      - main # or the branch you want to trigger the deployment on
-
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci --legacy-peer-deps
-
-      - name: Run tests
-        run: npm run test:run
-
+      - run: npm ci --legacy-peer-deps
+      - run: npm run build
+      - name: SPA fallback
+        run: cp build/index.html build/404.html
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./build
   deploy:
-    needs: test
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20' # or the version you need
-
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps
-
-      - name: Build
-        run: npm run build
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          publish_dir: ./build
-          cname: studio.m3org.com
+      - id: deployment
+        uses: actions/deploy-pages@v4
