@@ -1,4 +1,5 @@
 import React from "react"
+import { normalizeGameEra, readEraFromUrl } from "../lib/gameEras"
 
 export const CameraMode = {
   NORMAL: "NORMAL",
@@ -28,13 +29,27 @@ export const ViewProvider = (props) => {
   const [viewMode, setViewMode] = React.useState(ViewMode.LANDING)
   const [isLoading, setIsLoading] = React.useState(false)
   const [mouseIsOverUI, setMouseIsOverUI] = React.useState(false)
-  
+  const [gameEra, setGameEraState] = React.useState(() => {
+    const stored = localStorage.getItem('gcs_game_era')
+    return normalizeGameEra(stored || readEraFromUrl())
+  })
+
+  const setGameEra = React.useCallback((era) => {
+    const normalized = normalizeGameEra(era)
+    setGameEraState(normalized)
+    localStorage.setItem('gcs_game_era', normalized)
+    const url = new URL(window.location.href)
+    url.searchParams.set('era', normalized)
+    window.history.replaceState({}, '', url.pathname + url.search)
+  }, [])
+
   return (
     <ViewContext.Provider value={{
       viewMode, setViewMode,
       isLoading, setIsLoading,
       mouseIsOverUI, setMouseIsOverUI,
       currentCameraMode, setCurrentCameraMode,
+      gameEra, setGameEra,
     }}>
       {props.children}
     </ViewContext.Provider>

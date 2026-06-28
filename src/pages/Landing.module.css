@@ -1,3 +1,56 @@
+.eraBar {
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 2;
+}
+.eraTab {
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ddd;
+    border-radius: 999px;
+    padding: 8px 16px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 96px;
+    transition: all 0.2s ease;
+}
+.eraTab:hover {
+    border-color: rgba(22, 177, 149, 0.8);
+    color: #fff;
+}
+.eraTabActive {
+    background: rgba(22, 177, 149, 0.25);
+    border-color: #16b195;
+    color: #fff;
+    box-shadow: 0 0 12px rgba(22, 177, 149, 0.35);
+}
+.eraLabel {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+.eraSlots {
+    font-size: 10px;
+    opacity: 0.75;
+    margin-top: 2px;
+}
+.eraHint {
+    position: absolute;
+    top: 88px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 12px;
+    text-align: center;
+    max-width: 520px;
+    z-index: 2;
+}
 .buttonContainer {
     position: absolute;
     left: 0;

@@ -20,7 +20,7 @@ function Save() {
   const { t } = useContext(LanguageContext);
   const { playSound } = React.useContext(SoundContext)
   const { isMute } = React.useContext(AudioContext)
-  const { setViewMode } = React.useContext(ViewContext);
+  const { setViewMode, gameEra } = React.useContext(ViewContext);
   const { characterManager } = React.useContext(SceneContext)
 
 
@@ -104,9 +104,10 @@ function Save() {
         name: displayName,
         raceId: 'human',
         classId: 'warrior',
-        model3d,
+        gameEra,
+        model3d: { ...model3d, gameEra },
       })
-      alert(`Saved "${char.name}" to your Grudge account!\nID: ${char.id} • UUID linked to your Grudge ID.`)
+      alert(`Saved "${char.name}" to your ${gameEra} roster!\nID: ${char.id} • linked to your Grudge ID.`)
     } catch (e) {
       alert('Save to Grudge failed: ' + (e.message || e))
     }

@@ -99,13 +99,14 @@ const STARTING_INVENTORY = [
  * @param {Object} [params.skillLoadouts] - Initial skill selections
  * @returns {Promise<Object>} Created character with id, uuid, model3d
  */
-export async function createCharacter({ name, raceId, classId, model3d, skillLoadouts }) {
+export async function createCharacter({ name, raceId, classId, model3d, skillLoadouts, gameEra = 'warlords' }) {
   const character = await apiFetch('/api/characters', {
     method: 'POST',
     body: JSON.stringify({
       name,
       raceId,
       classId,
+      gameEra,
       equipment: STARTING_EQUIPMENT,
       inventory: STARTING_INVENTORY,
       model3d: {
@@ -117,12 +118,16 @@ export async function createCharacter({ name, raceId, classId, model3d, skillLoa
         armorColor: model3d?.armorColor || '#ffffff',
         capeEnabled: false,
         scale: 1.0,
-        // Support for grudge6 real race characters with mesh armours + weapons from grudge6.grudge-studio.com
+        gameEra,
         sourceUrl: model3d?.sourceUrl,
         grudge6: model3d?.grudge6 || false,
+        renderPipeline: model3d?.renderPipeline,
+        voiceProfile: model3d?.voiceProfile,
+        shipId: model3d?.shipId,
+        nexusMintId: model3d?.nexusMintId,
       },
       skillLoadouts: skillLoadouts || {},
-      equippedWeaponId: null, // unarmed
+      equippedWeaponId: null,
       skipAvatarGeneration: false,
     }),
   });
@@ -137,11 +142,38 @@ export async function createCharacter({ name, raceId, classId, model3d, skillLoa
   return character;
 }
 
-export async function getCharacters() {
+export async function getCharacters(era) {
   try {
-    return await apiFetch('/api/characters');
+    const query = era ? `?era=${encodeURIComponent(era)}` : '?envelope=1';
+    const data = await apiFetch(`/api/characters${query}`);
+    if (Array.isArray(data)) return data;
+    return data.characters || [];
   } catch {
     return [];
+  }
+}
+
+export async function getCharactersEnvelope(era) {
+  try {
+    const query = era ? `?era=${encodeURIComponent(era)}` : '?envelope=1';
+    return await apiFetch(`/api/characters${query}`);
+  } catch {
+    return { characters: [], eraSlots: null, eraMeta: null, era: era || null };
+  }
+}
+
+export async function activateCharacter(id, gameEra) {
+  return apiFetch(`/api/characters/${id}/activate`, {
+    method: 'PUT',
+    body: JSON.stringify({ gameEra }),
+  });
+}
+
+export async function getAccount() {
+  try {
+    return await apiFetch('/api/account');
+  } catch {
+    return null;
   }
 }
 

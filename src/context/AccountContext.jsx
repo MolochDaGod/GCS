@@ -1,8 +1,10 @@
 import React, { createContext, useState, useEffect } from "react"
 import {
   isAuthenticated, buildLoginUrl, logout as apiLogout,
-  getGrudgeId, getAccountId, getAuthToken, getCharacters,
+  getGrudgeId, getAccountId, getAuthToken,
+  getCharactersEnvelope, activateCharacter as apiActivateCharacter,
 } from "../services/grudgeAPI"
+import { mergeEraSlots, ERA_META } from "../lib/gameEras"
 
 export const AccountContext = createContext()
 
@@ -11,9 +13,29 @@ export const AccountProvider = (props) => {
   const [accountId, setAccountId] = useState(getAccountId())
   const [connected, setConnected] = useState(isAuthenticated())
   const [characters, setCharacters] = useState([])
+  const [eraSlots, setEraSlots] = useState(() => mergeEraSlots())
+  const [gameEra, setGameEra] = useState(
+    () => localStorage.getItem('gcs_game_era') || 'warlords'
+  )
   const [activeCharacterId, setActiveCharacterId] = useState(
     localStorage.getItem('grudge_active_character') || null
   )
+
+  const loadRoster = async (era = gameEra) => {
+    const envelope = await getCharactersEnvelope(era)
+    const slots = mergeEraSlots(envelope.eraSlots)
+    setEraSlots(slots)
+    setCharacters(envelope.characters || [])
+    const activeId = slots[era]?.activeCharacterId
+      || envelope.characters?.find(c => c.activeForEra)?.id
+      || envelope.characters?.[0]?.id
+      || null
+    if (activeId) {
+      setActiveCharacterId(activeId)
+      localStorage.setItem('grudge_active_character', activeId)
+    }
+    return envelope
+  }
 
   // Check for SSO callback token on mount
   useEffect(() => {
@@ -33,18 +55,12 @@ export const AccountProvider = (props) => {
     }
   }, [])
 
-  // Load characters when connected
+  // Load era roster when connected or era changes
   useEffect(() => {
     if (connected) {
-      getCharacters().then(chars => {
-        setCharacters(chars)
-        if (chars.length > 0 && !activeCharacterId) {
-          setActiveCharacterId(chars[0].id)
-          localStorage.setItem('grudge_active_character', chars[0].id)
-        }
-      })
+      loadRoster(gameEra).catch(() => {})
     }
-  }, [connected])
+  }, [connected, gameEra])
 
   // React to launcher / popup auth handoff (grudge-auth-updated custom event or storage)
   useEffect(() => {
@@ -53,7 +69,7 @@ export const AccountProvider = (props) => {
       setConnected(hasToken)
       setGrudgeId(getGrudgeId() || '')
       if (hasToken) {
-        getCharacters().then(chars => setCharacters(chars)).catch(() => {})
+        loadRoster(gameEra).catch(() => {})
       }
     }
     window.addEventListener('grudge-auth-updated', refreshAuth)
@@ -86,9 +102,22 @@ export const AccountProvider = (props) => {
     setActiveCharacterId(null)
   }
 
-  const selectCharacter = (id) => {
+  const selectCharacter = async (id) => {
     setActiveCharacterId(id)
     localStorage.setItem('grudge_active_character', id)
+    if (connected && id) {
+      try {
+        const result = await apiActivateCharacter(id, gameEra)
+        if (result?.eraSlots) setEraSlots(mergeEraSlots(result.eraSlots))
+      } catch {
+        // non-blocking — local selection still works offline
+      }
+    }
+  }
+
+  const switchEra = (era) => {
+    setGameEra(era)
+    localStorage.setItem('gcs_game_era', era)
   }
 
   return (
@@ -105,6 +134,11 @@ export const AccountProvider = (props) => {
         setCharacters,
         activeCharacterId,
         selectCharacter,
+        gameEra,
+        setGameEra: switchEra,
+        eraSlots,
+        eraMeta: ERA_META,
+        refreshRoster: () => loadRoster(gameEra),
         // Legacy compat (some components may reference these)
         walletAddress: grudgeId,
         setWalletAddress: setGrudgeId,
