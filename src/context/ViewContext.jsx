@@ -26,7 +26,14 @@ export const ViewContext = React.createContext()
 
 export const ViewProvider = (props) => {
   const [currentCameraMode, setCurrentCameraMode] = React.useState(CameraMode.NORMAL)
-  const [viewMode, setViewMode] = React.useState(ViewMode.LANDING)
+  const initialViewMode = () => {
+    if (typeof window === 'undefined') return ViewMode.LANDING
+    const mode = new URLSearchParams(window.location.search).get('mode')
+    if (mode === 'create') return ViewMode.CREATE
+    return ViewMode.LANDING
+  }
+
+  const [viewMode, setViewMode] = React.useState(initialViewMode)
   const [isLoading, setIsLoading] = React.useState(false)
   const [mouseIsOverUI, setMouseIsOverUI] = React.useState(false)
   const [gameEra, setGameEraState] = React.useState(() => {

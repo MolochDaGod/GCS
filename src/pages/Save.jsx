@@ -11,7 +11,8 @@ import MessageWindow from "../components/MessageWindow"
 import MergeOptions from "../components/MergeOptions"
 import FileDropComponent from "../components/FileDropComponent"
 import PurchaseMenu from "../components/PurchaseMenu"
-import { createCharacter, isAuthenticated } from "../services/grudgeAPI"
+import { createCharacter, isAuthenticated, activateCharacter } from "../services/grudgeAPI"
+import { redirectAfterCharacterSave } from "../lib/returnTo"
 
 
 function Save() {
@@ -107,6 +108,12 @@ function Save() {
         gameEra,
         model3d: { ...model3d, gameEra },
       })
+      try {
+        await activateCharacter(char.id, gameEra)
+      } catch {
+        // non-blocking — character still saved
+      }
+      if (redirectAfterCharacterSave(char.id)) return
       alert(`Saved "${char.name}" to your ${gameEra} roster!\nID: ${char.id} • linked to your Grudge ID.`)
     } catch (e) {
       alert('Save to Grudge failed: ' + (e.message || e))

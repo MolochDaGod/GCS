@@ -133,6 +133,39 @@ npm run dev
 
 ---
 
+## Fleet integration (deep links)
+
+GCS is the **canonical character creator** for every Grudge Studio game. Warlords, RTS-Grudge, and other fleet apps launch GCS with query params and receive the player back after save.
+
+| Param | Purpose | Example |
+|-------|---------|---------|
+| `era` | Roster slot on Railway `/api/characters` | `warlords`, `nexus`, `armada` |
+| `mode` | Skip landing and open create flow | `create` |
+| `returnTo` | Absolute URL to redirect after save (host allowlist) | `https://grudgewarlords.com/home` |
+| `grudge_token` | SSO JWT forwarded from the calling app | Bearer token from `grudge_auth_token` |
+| `grudgeId` | Account id when token is not forwarded | `grudge_account_id` from localStorage |
+
+**Post-save handoff:** when `returnTo` is set, GCS activates the new character and redirects to:
+
+```text
+{returnTo}?from=gcs&characterId={uuid}
+```
+
+Allowed `returnTo` hosts: `*.grudge-studio.com`, `*.grudgewarlords.com`, `*.vercel.app`.
+
+**Warlords redirect matrix** (GrudgeBuilder):
+
+| Route | GCS target | Notes |
+|-------|------------|-------|
+| `/character` | GCS landing | `era=warlords`, return `/home` |
+| `/create-character` | GCS `mode=create` | return `/game/character` |
+| `/character-creator` | GCS `mode=create` | return `/account` |
+| `?legacy=1` | Inline Warlords builder | Dev escape hatch only |
+
+**RTS-Grudge:** `/character` is the in-game **Hero Forge** (edit existing GLB presets). New account characters use the **+ GCS** button, which launches GCS with `returnTo` back to `/character?from=gcs&characterId=…`.
+
+---
+
 ## Configuration
 
 Copy `.env.example` to `.env.local` and fill in what you need (never commit secrets):
