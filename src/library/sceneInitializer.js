@@ -27,13 +27,21 @@ export function sceneInitializer(canvasId) {
     const sceneElements = new THREE.Object3D();
     scene.add(sceneElements);
 
+    const gcsViewer = {
+        fov: 30,
+        cameraPosition: [-2.2367993753934425, 1.1512971720174363, 2.2612065299409223],
+        cameraTarget: [0, 0.8, 0],
+        minDistance: 1,
+        maxDistance: 4,
+    };
+
     const camera = new THREE.PerspectiveCamera(
-        30,
+        gcsViewer.fov,
         window.innerWidth / window.innerHeight,
         0.1,
         1000
     );
-    camera.position.set(0, 1.3, 2);
+    camera.position.set(...gcsViewer.cameraPosition);
 
 
     const characterManager = new CharacterManager({parentModel: scene, createAnimationManager : true, renderCamera:camera})
@@ -49,11 +57,11 @@ export function sceneInitializer(canvasId) {
     });
 
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.minDistance = 1;
-    controls.maxDistance = 4;
+    controls.minDistance = gcsViewer.minDistance;
+    controls.maxDistance = gcsViewer.maxDistance;
     controls.maxPolarAngle = Math.PI / 2;
     controls.enablePan = true;
-    controls.target = new THREE.Vector3(0, 1, 0);
+    controls.target = new THREE.Vector3(...gcsViewer.cameraTarget);
     controls.enableDamping = true;
     controls.dampingFactor = 0.1;
 
@@ -61,14 +69,17 @@ export function sceneInitializer(canvasId) {
     const maxPan = new THREE.Vector3(0.5, 1.7, 0.5);
 
     const handleResize = () => {
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.aspect = window.innerWidth / window.innerHeight;
+        const w = canvasRef?.clientWidth || window.innerWidth;
+        const h = canvasRef?.clientHeight || window.innerHeight;
+        if (w === 0 || h === 0) return;
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
         camera.updateProjectionMatrix();
     };
 
     window.addEventListener("resize", handleResize);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    handleResize();
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
 
     const clock = new THREE.Clock();
