@@ -2,68 +2,100 @@
   "characters": [
     {
       "name": "Human",
-      "description": "Balanced fighter, versatile in all roles.",
-      "portrait": "https://assets.grudge-studio.com/portraits/human.jpg",
-      "manifest": "https://assets.grudge-studio.com/manifests/human.json",
+      "description": "Grudge6 Human — customize body, weapons, and colors.",
+      "portrait": "./assets/portraitImages/female.jpg",
+      "manifest": "./manifests/human.json",
       "format": "glb",
       "raceId": "human",
       "faction": "crusade"
     },
     {
       "name": "Barbarian",
-      "description": "Brutal berserker, raw power and fury.",
-      "portrait": "https://assets.grudge-studio.com/portraits/barbarian.jpg",
-      "manifest": "https://assets.grudge-studio.com/manifests/barbarian.json",
+      "description": "Grudge6 Barbarian — customize body, weapons, and colors.",
+      "portrait": "./assets/portraitImages/male.jpg",
+      "manifest": "./manifests/barbarian.json",
       "format": "glb",
       "raceId": "barbarian",
       "faction": "crusade"
     },
     {
       "name": "Elf",
-      "description": "Agile marksman, master of precision.",
-      "portrait": "https://assets.grudge-studio.com/portraits/elf.jpg",
-      "manifest": "https://assets.grudge-studio.com/manifests/elf.json",
+      "description": "Grudge6 Elf — customize body, weapons, and colors.",
+      "portrait": "./assets/portraitImages/female.jpg",
+      "manifest": "./manifests/elf.json",
       "format": "glb",
       "raceId": "elf",
       "faction": "fabled"
     },
     {
       "name": "Dwarf",
-      "description": "Stout defender, unbreakable resolve.",
-      "portrait": "https://assets.grudge-studio.com/portraits/dwarf.jpg",
-      "manifest": "https://assets.grudge-studio.com/manifests/dwarf.json",
+      "description": "Grudge6 Dwarf — customize body, weapons, and colors.",
+      "portrait": "./assets/portraitImages/male.jpg",
+      "manifest": "./manifests/dwarf.json",
       "format": "glb",
       "raceId": "dwarf",
       "faction": "crusade"
     },
     {
       "name": "Orc",
-      "description": "Savage warrior, strength through rage.",
-      "portrait": "https://assets.grudge-studio.com/portraits/orc.jpg",
-      "manifest": "https://assets.grudge-studio.com/manifests/orc.json",
+      "description": "Grudge6 Orc — customize body, weapons, and colors.",
+      "portrait": "./assets/portraitImages/0n1.jpg",
+      "manifest": "./manifests/orc.json",
       "format": "glb",
       "raceId": "orc",
       "faction": "legion"
     },
     {
       "name": "Undead",
-      "description": "Risen skeleton, relentless and fearless.",
-      "portrait": "https://assets.grudge-studio.com/portraits/undead.jpg",
-      "manifest": "https://assets.grudge-studio.com/manifests/undead.json",
+      "description": "Grudge6 Undead — customize body, weapons, and colors.",
+      "portrait": "./assets/portraitImages/tubby.jpg",
+      "manifest": "./manifests/undead.json",
       "format": "glb",
       "raceId": "undead",
       "faction": "legion"
     }
   ],
   "classes": [
-    { "id": "warrior", "name": "Warrior", "icon": "⚔️", "defaultWeapon": "unarmed" },
-    { "id": "mage", "name": "Mage", "icon": "🔮", "defaultWeapon": "unarmed" },
-    { "id": "ranger", "name": "Ranger", "icon": "🏹", "defaultWeapon": "unarmed" },
-    { "id": "worg", "name": "Worge", "icon": "🐺", "defaultWeapon": "unarmed" }
+    {
+      "id": "warrior",
+      "name": "Warrior",
+      "icon": "⚔️",
+      "defaultWeapon": "sword"
+    },
+    {
+      "id": "mage",
+      "name": "Mage",
+      "icon": "🔮",
+      "defaultWeapon": "staff"
+    },
+    {
+      "id": "ranger",
+      "name": "Ranger",
+      "icon": "🏹",
+      "defaultWeapon": "bow"
+    },
+    {
+      "id": "worg",
+      "name": "Worge",
+      "icon": "🐺",
+      "defaultWeapon": "unarmed"
+    }
   ],
   "defaultAnimations": [
-    { "name": "Idle", "description": "Standing idle", "location": "https://assets.grudge-studio.com/models/animations/sword-shield/sword and shield idle.glb" },
-    { "name": "Walk", "description": "Walking forward", "location": "https://assets.grudge-studio.com/models/animations/sword-shield/sword and shield run.glb" },
-    { "name": "Attack", "description": "Basic attack", "location": "https://assets.grudge-studio.com/models/animations/sword-shield/sword and shield attack.glb" }
+    {
+      "name": "Idle",
+      "description": "Standing idle",
+      "location": "https://assets.grudge-studio.com/models/animations/sword-shield/sword and shield idle.glb"
+    },
+    {
+      "name": "Walk",
+      "description": "Walking forward",
+      "location": "https://assets.grudge-studio.com/models/animations/sword-shield/sword and shield run.glb"
+    },
+    {
+      "name": "Attack",
+      "description": "Basic attack",
+      "location": "https://assets.grudge-studio.com/models/animations/sword-shield/sword and shield attack.glb"
+    }
   ]
 }

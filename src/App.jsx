@@ -46,7 +46,7 @@ async function fetchManifest(location) {
     return data;
   } catch (error) {
     console.error(`Error fetching manifest: ${error.message}`);
-    return [];
+    return { characters: [], classes: [], defaultAnimations: [] };
   }
 }
 

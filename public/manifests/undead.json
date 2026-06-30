@@ -1,0 +1,159 @@
+{
+  "assetsLocation": "https://assets.grudge-studio.com/",
+  "traitsDirectory": "models/",
+  "thumbnailsDirectory": "./assets/portraitImages/",
+  "traitIconsDirectorySvg": "./assets/icons/",
+  "displayScale": 1,
+  "exportScale": 1,
+  "locked": false,
+  "requiredTraits": [
+    "body"
+  ],
+  "initialTraits": [
+    "body"
+  ],
+  "randomTraits": [
+    "weapon_r"
+  ],
+  "animationPath": [
+    "https://assets.grudge-studio.com/models/animations/sword-shield/sword and shield idle.glb"
+  ],
+  "traits": [
+    {
+      "trait": "body",
+      "name": "Body",
+      "iconSvg": "slotBody.svg",
+      "cameraTarget": {
+        "distance": 3.2,
+        "height": 0.8
+      },
+      "collection": [
+        {
+          "id": "default",
+          "name": "Undead",
+          "fullDirectory": "https://assets.grudge-studio.com/models/characters/undead.glb",
+          "colorCollection": "skin"
+        }
+      ]
+    },
+    {
+      "trait": "weapon_r",
+      "name": "Main Hand",
+      "iconSvg": "slotRightHand.svg",
+      "cameraTarget": {
+        "distance": 2.8,
+        "height": 1
+      },
+      "collection": [
+        {
+          "id": "sword",
+          "name": "Sword",
+          "fullDirectory": "https://assets.grudge-studio.com/models/weapons/sword.glb"
+        },
+        {
+          "id": "axe",
+          "name": "Axe",
+          "fullDirectory": "https://assets.grudge-studio.com/models/weapons/axe.glb"
+        },
+        {
+          "id": "hammer",
+          "name": "Hammer",
+          "fullDirectory": "https://assets.grudge-studio.com/models/weapons/hammer.glb"
+        },
+        {
+          "id": "dagger",
+          "name": "Dagger",
+          "fullDirectory": "https://assets.grudge-studio.com/models/weapons/dagger.glb"
+        },
+        {
+          "id": "spear",
+          "name": "Spear",
+          "fullDirectory": "https://assets.grudge-studio.com/models/weapons/spear.glb"
+        },
+        {
+          "id": "mace",
+          "name": "Mace",
+          "fullDirectory": "https://assets.grudge-studio.com/models/weapons/mace.glb"
+        }
+      ]
+    },
+    {
+      "trait": "weapon_l",
+      "name": "Off Hand",
+      "iconSvg": "slotLeftHand.svg",
+      "cameraTarget": {
+        "distance": 2.8,
+        "height": 1
+      },
+      "collection": [
+        {
+          "id": "shield",
+          "name": "Shield",
+          "fullDirectory": "https://assets.grudge-studio.com/models/weapons/shield.glb"
+        },
+        {
+          "id": "bow",
+          "name": "Bow",
+          "fullDirectory": "https://assets.grudge-studio.com/models/weapons/bow.glb"
+        },
+        {
+          "id": "staff",
+          "name": "Staff",
+          "fullDirectory": "https://assets.grudge-studio.com/models/weapons/staff.glb"
+        }
+      ]
+    }
+  ],
+  "colorCollections": [
+    {
+      "trait": "skin",
+      "collection": [
+        {
+          "id": "light",
+          "name": "Light",
+          "value": "#e8c39e"
+        },
+        {
+          "id": "medium",
+          "name": "Medium",
+          "value": "#c68642"
+        },
+        {
+          "id": "dark",
+          "name": "Dark",
+          "value": "#8d5524"
+        },
+        {
+          "id": "pale",
+          "name": "Pale",
+          "value": "#f5d0a9"
+        }
+      ]
+    },
+    {
+      "trait": "armor",
+      "collection": [
+        {
+          "id": "iron",
+          "name": "Iron",
+          "value": "#6b7280"
+        },
+        {
+          "id": "gold",
+          "name": "Gold",
+          "value": "#c9a04e"
+        },
+        {
+          "id": "crimson",
+          "name": "Crimson",
+          "value": "#8b2020"
+        },
+        {
+          "id": "frost",
+          "name": "Frost",
+          "value": "#7ec8e3"
+        }
+      ]
+    }
+  ]
+}
